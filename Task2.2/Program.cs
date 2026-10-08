@@ -132,7 +132,7 @@ namespace WorkerTeamApp
         {
             Console.OutputEncoding = Encoding.UTF8;
 
-            Console.Write("Enter the command name: ");
+            Console.Write("Enter the team name: ");
             string teamName = Console.ReadLine() ?? string.Empty;
             Team team = new Team(teamName);
 
