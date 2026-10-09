@@ -1,0 +1,35 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Task5.MainPage">
+
+    <Grid RowDefinitions="Auto, Auto, *, Auto" Padding="20">
+
+        <Label Grid.Row="0" Text="Store Inventory" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,0,0,20" />
+
+        <Grid Grid.Row="1" ColumnDefinitions="2*, 1*, 1*, 3*" Padding="10" BackgroundColor="LightGray">
+            <Label Grid.Column="0" Text="Name" FontAttributes="Bold" />
+            <Label Grid.Column="1" Text="Type" FontAttributes="Bold" />
+            <Label Grid.Column="2" Text="Price" FontAttributes="Bold" />
+            <Label Grid.Column="3" Text="Details" FontAttributes="Bold" />
+        </Grid>
+
+        <CollectionView Grid.Row="2" x:Name="ProductsGrid" SelectionMode="Single">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid ColumnDefinitions="2*, 1*, 1*, 3*" Padding="10">
+                        <Label Grid.Column="0" Text="{Binding Name}" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="{Binding ProductType}" VerticalOptions="Center" />
+                        <Label Grid.Column="2" Text="{Binding Price}" VerticalOptions="Center" />
+                        <Label Grid.Column="3" Text="{Binding SpecificDetails}" VerticalOptions="Center" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <HorizontalStackLayout Grid.Row="3" HorizontalOptions="Center" Spacing="20" Margin="0,20,0,0">
+            <Button Text="Add Random Product" Clicked="OnAddProductClicked" WidthRequest="200" />
+            <Button Text="Delete Selected Product" Clicked="OnDeleteProductClicked" WidthRequest="200" BackgroundColor="DarkRed" />
+        </HorizontalStackLayout>
+
+    </Grid>
+</ContentPage>
