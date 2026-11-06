@@ -1,105 +1,194 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
 
-// 6. Add a new interface "Geographic Object"
-public interface IGeographicObject
+namespace Task4_Interface
 {
-    double X { get; set; }
-    double Y { get; set; }
-    string Name { get; set; }
-    string Description { get; set; }
-
-    void GetInformation();
-}
-
-// 7. Add "River" and "Mountain" classes that implement the interface
-public class RiverImpl : IGeographicObject
-{
-    public double X { get; set; }
-    public double Y { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
-    
-    public double FlowSpeed { get; set; }
-    public double TotalLength { get; set; }
-
-    public void GetInformation()
+    // 6. Interface "Geographic Object"
+    public interface IGeographicObject
     {
-        Console.WriteLine($"Name: {Name} (Interface Implementation)");
-        Console.WriteLine($"Coordinates: ({X}, {Y})");
-        Console.WriteLine($"Description: {Description}");
-        Console.WriteLine($"Flow Speed: {FlowSpeed} cm/s");
-        Console.WriteLine($"Total Length: {TotalLength}");
+        double CoordinateX { get; }
+        double CoordinateY { get; }
+        string Name { get; }
+        string Description { get; }
+
+        void GetInfo();
     }
-}
 
-public class MountainImpl : IGeographicObject
-{
-    public double X { get; set; }
-    public double Y { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
-    
-    public double HighestPoint { get; set; }
-
-    public void GetInformation()
+    // 7. "River" and "Mountain" implement the interface
+    public class River : IGeographicObject
     {
-        Console.WriteLine($"Name: {Name} (Interface Implementation)");
-        Console.WriteLine($"Coordinates: ({X}, {Y})");
-        Console.WriteLine($"Description: {Description}");
-        Console.WriteLine($"Highest Point: {HighestPoint}");
+        public double CoordinateX { get; }
+        public double CoordinateY { get; }
+        public string Name { get; }
+        public string Description { get; }
+        public double FlowSpeed { get; }   // cm/s
+        public double TotalLength { get; } // km
+
+        public River(double x, double y, string name, string description,
+                     double flowSpeed, double totalLength)
+        {
+            CoordinateX = x;
+            CoordinateY = y;
+            Name = name;
+            Description = description;
+            FlowSpeed = flowSpeed;
+            TotalLength = totalLength;
+        }
+
+        public void GetInfo()
+        {
+            Console.WriteLine($"Name: {Name}");
+            Console.WriteLine($"Coordinates: ({CoordinateX}, {CoordinateY})");
+            Console.WriteLine($"Description: {Description}");
+            Console.WriteLine($"Flow Speed: {FlowSpeed} cm/s");
+            Console.WriteLine($"Total Length: {TotalLength} km");
+        }
     }
-}
 
-class Program
-{
-    static void Main(string[] args)
+    public class Mountain : IGeographicObject
     {
-        Console.WriteLine("--- Create a River ---");
-        IGeographicObject userRiver = new RiverImpl();
-        
-        Console.Write("Enter name: ");
-        userRiver.Name = Console.ReadLine();
-        
-        Console.Write("Enter description: ");
-        userRiver.Description = Console.ReadLine();
-        
-        Console.Write("Enter X coordinate: ");
-        userRiver.X = Convert.ToDouble(Console.ReadLine());
-        
-        Console.Write("Enter Y coordinate: ");
-        userRiver.Y = Convert.ToDouble(Console.ReadLine());
-        
-        // Для доступу до специфічних властивостей, яких немає в інтерфейсі, використовуємо приведення типів
-        Console.Write("Enter flow speed (cm/s): ");
-        ((RiverImpl)userRiver).FlowSpeed = Convert.ToDouble(Console.ReadLine());
-        
-        Console.Write("Enter total length: ");
-        ((RiverImpl)userRiver).TotalLength = Convert.ToDouble(Console.ReadLine());
+        public double CoordinateX { get; }
+        public double CoordinateY { get; }
+        public string Name { get; }
+        public string Description { get; }
+        public double HighestPoint { get; } // m
 
-        Console.WriteLine("\n--- Create a Mountain ---");
-        IGeographicObject userMountain = new MountainImpl();
-        
-        Console.Write("Enter name: ");
-        userMountain.Name = Console.ReadLine();
-        
-        Console.Write("Enter description: ");
-        userMountain.Description = Console.ReadLine();
-        
-        Console.Write("Enter X coordinate: ");
-        userMountain.X = Convert.ToDouble(Console.ReadLine());
-        
-        Console.Write("Enter Y coordinate: ");
-        userMountain.Y = Convert.ToDouble(Console.ReadLine());
-        
-        Console.Write("Enter highest point: ");
-        ((MountainImpl)userMountain).HighestPoint = Convert.ToDouble(Console.ReadLine());
+        public Mountain(double x, double y, string name, string description,
+                        double highestPoint)
+        {
+            CoordinateX = x;
+            CoordinateY = y;
+            Name = name;
+            Description = description;
+            HighestPoint = highestPoint;
+        }
 
-        Console.WriteLine("\n--- River Information ---");
-        userRiver.GetInformation();
+        public void GetInfo()
+        {
+            Console.WriteLine($"Name: {Name}");
+            Console.WriteLine($"Coordinates: ({CoordinateX}, {CoordinateY})");
+            Console.WriteLine($"Description: {Description}");
+            Console.WriteLine($"Highest Point: {HighestPoint} m");
+        }
+    }
 
-        Console.WriteLine("\n--- Mountain Information ---");
-        userMountain.GetInformation();
-        
-        Console.ReadLine();
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            Console.InputEncoding = Encoding.UTF8;
+            Console.OutputEncoding = Encoding.UTF8;
+
+            List<IGeographicObject> objects = new List<IGeographicObject>();
+            bool isRunning = true;
+
+            while (isRunning)
+            {
+                Console.WriteLine("\nMenu:");
+                Console.WriteLine("1. Add River");
+                Console.WriteLine("2. Add Mountain");
+                Console.WriteLine("3. Show all objects");
+                Console.WriteLine("0. Exit");
+                Console.Write("Select choice: ");
+
+                string choice = (Console.ReadLine() ?? string.Empty).Trim();
+
+                switch (choice)
+                {
+                    case "1":
+                        AddRiver(objects);
+                        break;
+                    case "2":
+                        AddMountain(objects);
+                        break;
+                    case "3":
+                        ShowAllObjects(objects);
+                        break;
+                    case "0":
+                        isRunning = false;
+                        break;
+                    default:
+                        Console.WriteLine("Error: Invalid choice.");
+                        break;
+                }
+            }
+        }
+
+        private static void AddRiver(List<IGeographicObject> objects)
+        {
+            ReadCommonFields(out string name, out string description, out double x, out double y);
+            double speed = ReadDouble("Enter flow speed (cm/s): ", true);
+            double length = ReadDouble("Enter total length (km): ", true);
+
+            objects.Add(new River(x, y, name, description, speed, length));
+            Console.WriteLine($"River '{name}' added.");
+        }
+
+        private static void AddMountain(List<IGeographicObject> objects)
+        {
+            ReadCommonFields(out string name, out string description, out double x, out double y);
+            double height = ReadDouble("Enter highest point (m): ", true);
+
+            objects.Add(new Mountain(x, y, name, description, height));
+            Console.WriteLine($"Mountain '{name}' added.");
+        }
+
+        private static void ShowAllObjects(List<IGeographicObject> objects)
+        {
+            if (objects.Count == 0)
+            {
+                Console.WriteLine("No objects available.");
+                return;
+            }
+
+            for (int i = 0; i < objects.Count; i++)
+            {
+                Console.WriteLine($"\nObject {i + 1}");
+                objects[i].GetInfo(); // call through the interface
+            }
+        }
+
+        // Fields shared by every geographic object
+        private static void ReadCommonFields(out string name, out string description,
+                                             out double x, out double y)
+        {
+            Console.Write("Enter name: ");
+            name = Console.ReadLine() ?? string.Empty;
+
+            Console.Write("Enter description: ");
+            description = Console.ReadLine() ?? string.Empty;
+
+            x = ReadDouble("Enter Coordinate X: ");
+            y = ReadDouble("Enter Coordinate Y: ");
+        }
+
+        // Accepts both "27.98" and "27,98"; asks again only for this field
+        private static double ReadDouble(string prompt, bool nonNegative = false)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                string input = (Console.ReadLine() ?? string.Empty).Trim().Replace(',', '.');
+
+                bool isNumber = double.TryParse(input, NumberStyles.Float,
+                                                CultureInfo.InvariantCulture, out double value)
+                                && !double.IsNaN(value) && !double.IsInfinity(value);
+
+                if (!isNumber)
+                {
+                    Console.WriteLine("Error: enter a valid number.");
+                }
+                else if (nonNegative && value < 0)
+                {
+                    Console.WriteLine("Error: value cannot be negative.");
+                }
+                else
+                {
+                    return value;
+                }
+            }
+        }
     }
 }
