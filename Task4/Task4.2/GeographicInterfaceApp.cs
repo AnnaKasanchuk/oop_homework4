@@ -1,76 +1,105 @@
 ﻿using System;
 
-namespace GeographicInterfaceApp
+// 6. Add a new interface "Geographic Object"
+public interface IGeographicObject
 {
-    public interface IGeographicObject
-    {
-        double X { get; set; }
-        double Y { get; set; }
-        string Name { get; set; }
-        string Description { get; set; }
+    double X { get; set; }
+    double Y { get; set; }
+    string Name { get; set; }
+    string Description { get; set; }
 
-        void GetInfo();
+    void GetInformation();
+}
+
+// 7. Add "River" and "Mountain" classes that implement the interface
+public class RiverImpl : IGeographicObject
+{
+    public double X { get; set; }
+    public double Y { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
+    
+    public double FlowSpeed { get; set; }
+    public double TotalLength { get; set; }
+
+    public void GetInformation()
+    {
+        Console.WriteLine($"Name: {Name} (Interface Implementation)");
+        Console.WriteLine($"Coordinates: ({X}, {Y})");
+        Console.WriteLine($"Description: {Description}");
+        Console.WriteLine($"Flow Speed: {FlowSpeed} cm/s");
+        Console.WriteLine($"Total Length: {TotalLength}");
     }
+}
 
-    public class River : IGeographicObject
+public class MountainImpl : IGeographicObject
+{
+    public double X { get; set; }
+    public double Y { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
+    
+    public double HighestPoint { get; set; }
+
+    public void GetInformation()
     {
-        public double X { get; set; }
-        public double Y { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
-
-        public double FlowSpeed { get; set; }
-        public double TotalLength { get; set; }
-
-        public void GetInfo()
-        {
-            Console.WriteLine($"Object: {Name} | Coordinates: ({X}; {Y}) | Description: {Description}");
-            Console.WriteLine($"Flow Speed: {FlowSpeed} cm/s, Total Length: {TotalLength} km");
-        }
+        Console.WriteLine($"Name: {Name} (Interface Implementation)");
+        Console.WriteLine($"Coordinates: ({X}, {Y})");
+        Console.WriteLine($"Description: {Description}");
+        Console.WriteLine($"Highest Point: {HighestPoint}");
     }
+}
 
-    public class Mountain : IGeographicObject
+class Program
+{
+    static void Main(string[] args)
     {
-        public double X { get; set; }
-        public double Y { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
+        Console.WriteLine("--- Create a River ---");
+        IGeographicObject userRiver = new RiverImpl();
+        
+        Console.Write("Enter name: ");
+        userRiver.Name = Console.ReadLine();
+        
+        Console.Write("Enter description: ");
+        userRiver.Description = Console.ReadLine();
+        
+        Console.Write("Enter X coordinate: ");
+        userRiver.X = Convert.ToDouble(Console.ReadLine());
+        
+        Console.Write("Enter Y coordinate: ");
+        userRiver.Y = Convert.ToDouble(Console.ReadLine());
+        
+        // Для доступу до специфічних властивостей, яких немає в інтерфейсі, використовуємо приведення типів
+        Console.Write("Enter flow speed (cm/s): ");
+        ((RiverImpl)userRiver).FlowSpeed = Convert.ToDouble(Console.ReadLine());
+        
+        Console.Write("Enter total length: ");
+        ((RiverImpl)userRiver).TotalLength = Convert.ToDouble(Console.ReadLine());
 
-        public double HighestPoint { get; set; }
+        Console.WriteLine("\n--- Create a Mountain ---");
+        IGeographicObject userMountain = new MountainImpl();
+        
+        Console.Write("Enter name: ");
+        userMountain.Name = Console.ReadLine();
+        
+        Console.Write("Enter description: ");
+        userMountain.Description = Console.ReadLine();
+        
+        Console.Write("Enter X coordinate: ");
+        userMountain.X = Convert.ToDouble(Console.ReadLine());
+        
+        Console.Write("Enter Y coordinate: ");
+        userMountain.Y = Convert.ToDouble(Console.ReadLine());
+        
+        Console.Write("Enter highest point: ");
+        ((MountainImpl)userMountain).HighestPoint = Convert.ToDouble(Console.ReadLine());
 
-        public void GetInfo()
-        {
-            Console.WriteLine($"Object: {Name} | Coordinates: ({X}; {Y}) | Description: {Description}");
-            Console.WriteLine($"Highest Point: {HighestPoint} m");
-        }
-    }
+        Console.WriteLine("\n--- River Information ---");
+        userRiver.GetInformation();
 
-    class Program
-    {
-        static void Main()
-        {
-            IGeographicObject river = new River
-            {
-                X = 46.4952,
-                Y = 31.9930,
-                Name = "Southern Bug",
-                Description = "A river located in southwestern Ukraine",
-                FlowSpeed = 45.0,
-                TotalLength = 806.0
-            };
-
-            IGeographicObject mountain = new Mountain
-            {
-                X = 48.16,
-                Y = 24.5,
-                Name = "Pip Ivan",
-                Description = "One of the highest peaks of the Chornohora range",
-                HighestPoint = 2028.0
-            };
-
-            river.GetInfo();
-            Console.WriteLine(new string('-', 30));
-            mountain.GetInfo();
-        }
+        Console.WriteLine("\n--- Mountain Information ---");
+        userMountain.GetInformation();
+        
+        Console.ReadLine();
     }
 }
